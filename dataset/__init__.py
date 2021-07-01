@@ -73,6 +73,16 @@ def build_data_loader(args):
         dataset_validation = ScaredDataset(dataset_dir, 'validation')
         dataset_test = ScaredDataset(dataset_dir, 'validation')
 
+    elif args.dataset == 'custom':
+        dataset_train = CustomFullDataset(dataset_dir, dataset_name='custom', mode='train')
+        dataset_validation = CustomFullDataset(dataset_dir, dataset_name='custom', mode='val')
+        dataset_test = CustomFullDataset(dataset_dir, dataset_name='custom', mode='val')
+
+    elif args.dataset == 'custom_full':
+        dataset_train = CustomFullDataset(dataset_dir, mode='train')
+        dataset_validation = CustomFullDataset(dataset_dir, mode='val')
+        dataset_test = CustomFullDataset(dataset_dir, mode='val')
+
     else:
         raise ValueError(f'Dataset not recognized: {args.dataset}')
 
