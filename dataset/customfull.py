@@ -12,10 +12,10 @@ from PIL import Image
 import numpy as np
 
 class CustomFullDataset(Dataset):
-    def __init__(self, datadir, dataset_name='custom_dataset_full', transform=None, save_filename=False, mode='train'):
+    def __init__(self, data_dir, dataset_name='custom_dataset_full', transform=None, save_filename=False, mode='train'):
         super(CustomFullDataset, self).__init__()
 
-        self.datadir = datadir
+        self.data_dir = data_dir
         self.mode = mode
         self.dataset_name = dataset_name
         self.save_filename = save_filename
@@ -83,23 +83,10 @@ class CustomFullDataset(Dataset):
                 self.dataset_name == 'custom_dataset_real'):
                     sample['label'] = os.path.join(data_dir, splits[4]) # label image
 
-                sample['pseudo_disp'] = None
-
             self.samples.append(sample)
 
         # transformations TODO
-        self._augmentation()
-
-    def _read_data(self):
-        assert self.left_fold is not None
-
-        self.left_data = natsorted([os.path.join(self.datadir, self.sub_folder, self.left_fold, img) for img in
-                                    os.listdir(os.path.join(self.datadir, self.sub_folder, self.left_fold)) if
-                                    img.find('_10') > -1])
-        self.right_data = [img.replace(self.left_fold, self.right_fold) for img in self.left_data]
-        self.disp_data = [img.replace(self.left_fold, self.disp_fold) for img in self.left_data]
-
-        self._split_data()
+        # self._augmentation()
 
     def _augmentation(self):
         if self.split == 'train':
@@ -113,7 +100,7 @@ class CustomFullDataset(Dataset):
             raise Exception("Split not recognized")
 
     def __len__(self):
-        return len(self.left_data)
+        return len(self.samples)
 
     def __getitem__(self, index):
         sample = {}
@@ -129,8 +116,8 @@ class CustomFullDataset(Dataset):
         subset = True if 'subset' in self.dataset_name else False
         if sample_path['disp'] is not None:
             sample['disp'] = read_disp(sample_path['disp'], subset=subset)  # [H, W]
-        if sample_path['pseudo_disp'] is not None:
-            sample['pseudo_disp'] = read_disp(sample_path['pseudo_disp'], subset=subset)  # [H, W]
+            sample['occ_mask'] = np.zeros_like(sample['disp']).astype(np.bool)
+            sample['occ_mask_right']= np.zeros_like(sample['disp']).astype(np.bool)
 
         if self.transform is not None:
             sample = self.transform(sample)

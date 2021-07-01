@@ -88,7 +88,7 @@ class Criterion(nn.Module):
     def compute_rr_loss(self, outputs: dict, inputs: NestedTensor, invalid_mask: Tensor):
         """
         compute rr loss
-        
+
         :param outputs: dictionary, outputs from the network
         :param inputs: input data
         :param invalid_mask: invalid disparities (including occ and places without data), [N,H,W]
@@ -109,18 +109,18 @@ class Criterion(nn.Module):
             rr_loss = rr_loss[~invalid_mask]
 
         # if there is occlusion
-        try:
-            rr_loss_occ_left = - torch.log(outputs['gt_response_occ_left'] + eps)
-            # print(rr_loss_occ_left.shape)
-            rr_loss = torch.cat([rr_loss, rr_loss_occ_left])
-        except KeyError:
-            pass
-        try:
-            rr_loss_occ_right = - torch.log(outputs['gt_response_occ_right'] + eps)
-            # print(rr_loss_occ_right.shape)
-            rr_loss = torch.cat([rr_loss, rr_loss_occ_right])
-        except KeyError:
-            pass
+        # try:
+        #     rr_loss_occ_left = - torch.log(outputs['gt_response_occ_left'] + eps)
+        #     # print(rr_loss_occ_left.shape)
+        #     rr_loss = torch.cat([rr_loss, rr_loss_occ_left])
+        # except KeyError:
+        #     pass
+        # try:
+        #     rr_loss_occ_right = - torch.log(outputs['gt_response_occ_right'] + eps)
+        #     # print(rr_loss_occ_right.shape)
+        #     rr_loss = torch.cat([rr_loss, rr_loss_occ_right])
+        # except KeyError:
+        #     pass
 
         return rr_loss.mean()
 
