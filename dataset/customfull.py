@@ -12,12 +12,14 @@ from PIL import Image
 import numpy as np
 
 class CustomFullDataset(Dataset):
-    def __init__(self, datadir, dataset_name='custom_full', mode='train'):
+    def __init__(self, datadir, dataset_name='custom_dataset_full', transform=None, save_filename=False, mode='train'):
         super(CustomFullDataset, self).__init__()
 
         self.datadir = datadir
         self.mode = mode
         self.dataset_name = dataset_name
+        self.save_filename = save_filename
+        self.transform = transform
 
         custom = {
             'train': 'filenames/custom_train.txt',
@@ -85,7 +87,7 @@ class CustomFullDataset(Dataset):
 
             self.samples.append(sample)
 
-        # transformations TODO 
+        # transformations TODO
         self._augmentation()
 
     def _read_data(self):

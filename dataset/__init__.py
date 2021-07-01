@@ -9,6 +9,7 @@ from dataset.middlebury import Middlebury2014Dataset
 from dataset.scared import ScaredDataset
 from dataset.scene_flow import SceneFlowSamplePackDataset, SceneFlowFlyingThingsDataset, SceneFlowMonkaaDataset
 from dataset.sintel import SintelDataset
+from dataset.customfull import CustomFullDataset
 
 
 def build_data_loader(args):
@@ -74,9 +75,9 @@ def build_data_loader(args):
         dataset_test = ScaredDataset(dataset_dir, 'validation')
 
     elif args.dataset == 'custom':
-        dataset_train = CustomFullDataset(dataset_dir, dataset_name='custom', mode='train')
-        dataset_validation = CustomFullDataset(dataset_dir, dataset_name='custom', mode='val')
-        dataset_test = CustomFullDataset(dataset_dir, dataset_name='custom', mode='val')
+        dataset_train = CustomFullDataset(dataset_dir, dataset_name='custom_dataset', mode='train')
+        dataset_validation = CustomFullDataset(dataset_dir, dataset_name='custom_dataset', mode='val')
+        dataset_test = CustomFullDataset(dataset_dir, dataset_name='custom_dataset', mode='val')
 
     elif args.dataset == 'custom_full':
         dataset_train = CustomFullDataset(dataset_dir, mode='train')
